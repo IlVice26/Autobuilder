@@ -2,18 +2,6 @@
 
 This program was _initially born_ with the intention of being able to directly compile the source code written in _C_ and run it immediately after saving the file, just to simplify those two _boring_ commands.
 
-## Technical information
-
-The program requires a version of **Python3** installed. The version I use is **3.8.4 64-bit**.
-
-Libraries used:
-
-- curses (creation of the GUI)
-- termios (terminal reset)
-- json (facades management)
-- threading (thread management)
-
-
 ## How is the project structured?
 
 The project, for now, is structured in three parts:
@@ -60,3 +48,18 @@ There are two very important files within this folder:
         - **title:** Corresponds to the window title  
         - **body:** Corresponds to the central body of the window. Here we can customize the terminal line by line. The number, such as _"2"_ corresponds to the line number, while the assigned value corresponds to what you want to print on the screen. When writing the guide, you can print variables present in **bash_manager.py**, enclosed with **&v&**  
         - **footer:** Corresponds to the last line of the terminal. In the future, the ability to update the _footer_ whenever you want will be implemented, perhaps during an update or operation. 
+
+## Technical information
+
+The program requires a version of **Python3** installed. The version I use is **3.8.4 64-bit**. I Program with Visual Studio Code connected to WSL (Windows Subsystem for Linux). The distro is Ubuntu 20.04 
+
+Libraries used:
+
+- **curses** (creation of the GUI)
+- **termios** (terminal reset)
+- **json** (facades management)
+- **threading** (thread management)
+
+## Disclaimer
+
+In case of problems with the program, before reporting it via the **Issue** tab on GitHub, try to replicate my own programming environment, so as not to create unnecessary "Issues".
