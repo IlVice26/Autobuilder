@@ -72,9 +72,20 @@ class BashManager():
     def add_title(self, string):
         """ Print a title """
 
-        bar = " " * self.dimwin[1]
+        # Calculation of the space between the title and the borders
+        title_space = self.dimwin[1] - len(string)
+        if title_space % 2 == 1:
+            space_left = int(title_space / 2)
+            space_right = space_left + 1
+        else:
+            self.win.addstr(1, 0, str(title_space % 2))
+            space_left = int(title_space / 2)
+            space_right = int(title_space / 2)
+        
+        self.win.addstr(0, 0, 
+            space_left * " " + string + space_right * " "
+            , curses.A_REVERSE)
 
-        self.win.addstr(0, 0, bar, curses.A_REVERSE)
         self.win.refresh()
 
 
