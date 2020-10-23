@@ -3,8 +3,10 @@
         "title" : "Autobuilder - Configuration",
         "body" : {
             "2" : "Terminal size: ",
-            "3" : "  -> x: &v&dimvar[1]&v&",
-            "4" : "  -> y: &v&dimvar[0]&v&"
+            "3" : "  -> x: &v&dimwinx&v&",
+            "4" : "  -> y: &v&dimwiny&v&",
+            "6" : "Facades dict",
+            "7" : "&v&all_facades&v&"
         },
         "footer" : ""
     }

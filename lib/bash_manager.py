@@ -34,6 +34,9 @@ class BashManager():
         self.dimwin = self.get_max_xy()
         self.win = self.create_win(self.dimwin[0], self.dimwin[1])
 
+        self.dimwinx = self.dimwin[1]
+        self.dimwiny = self.dimwin[0]
+
         # Class variables
         self.all_facades = {}
 
@@ -74,7 +77,11 @@ class BashManager():
     def add_body(self, dict_b):
         # self.add_str_pos(str(len(dict_b) + 1), 0 , 0)
         for key in list(dict_b.keys()):
-            self.add_str_pos(str(dict_b[key]), int(key), 0)
+            if str(dict_b[key]).__contains__("&v&"):
+                string = str(dict_b[key]).split("&v&")
+                self.add_str_pos(str(string[0]) + str(self.get_var(string[-2])), int(key), 0)
+            else:
+                self.add_str_pos(str(dict_b[key]), int(key), 0)
 
 
     def add_footer(self, string):
@@ -85,14 +92,16 @@ class BashManager():
 
 
     def create_win(self, height, width):
-        """ Create and returns a new window inside a box """
-
         win = curses.newwin(height, width)
         return win
 
 
     def get_max_xy(self):
         return self.stdscr.getmaxyx()
+
+
+    def get_var(self, source):
+        return getattr(self, source)
 
 
     def load_conf_json(self):
