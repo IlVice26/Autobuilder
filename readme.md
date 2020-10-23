@@ -32,6 +32,7 @@ There are two very important files within this folder:
 
 - **main.json**
     - _**Disclaimer:**_ The file name doesn't have to be called that way, you can call it whatever you want!  
+    
     ```
     {
         "window" : {
