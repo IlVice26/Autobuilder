@@ -1,0 +1,11 @@
+{
+    "window" : {
+        "title" : "Autobuilder - Configuration",
+        "body" : {
+            "2" : "Terminal size: ",
+            "3" : "  -> x: &v&dimvar[1]&v&",
+            "4" : "  -> y: &v&dimvar[0]&v&"
+        },
+        "footer" : ""
+    }
+}

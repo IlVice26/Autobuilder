@@ -32,8 +32,7 @@ class ThreadManager():
         # Within this construct all Threads are initialised
         try:
             # Initialization of the Thread
-            self.bash.add_title("Autobuilder")
-            time.sleep(5)
+            self.bash.load_facade("test")
 
             # From this point all Threads start
             pass
