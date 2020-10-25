@@ -16,7 +16,6 @@ class ThreadManager():
     def __init__(self, bash_manager, variables_manager):
         self.bash = bash_manager
         self.variables = variables_manager
-        self.listen_key = False
 
 
     def start_threads(self):
@@ -44,12 +43,4 @@ class ThreadManager():
 
 
     def thread_ctrl_keys(self):
-        while self.listen_key:
-            keys_dict = self.bash.keys_facades
-            ch = self.bash.win.getch()
-            if ch in list(keys_dict.keys()):
-                self.bash.update_footer("True")
-                # self.bash.load_facade(keys_dict[ch])
-
-            
-        
+        pass

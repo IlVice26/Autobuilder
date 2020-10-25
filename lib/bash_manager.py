@@ -34,6 +34,8 @@ class BashManager():
         # Class variables
         self.all_facades = {}
         self.keys_facades = {}
+        self.current_facade = "main"
+        self.previus_facade = "main"
 
         # Load conf file
         self.__load_conf_json()
@@ -134,9 +136,16 @@ class BashManager():
 
         # Loading every file founded in config.json
         for cf_file in files_win:
-            file = open("facades/" + cf_file, "r")
-            data = json.load(file)
-            self.all_facades[cf_file] = data['window']
+            try:
+                file = open("facades/" + cf_file, "r")
+                data = json.load(file)
+                self.all_facades[cf_file] = data['window']
+            except FileNotFoundError:
+                self.__clear_win()
+                self.__add_str_pos("The '" + cf_file + "' file has not been found...", 0, 0)
+                self.win.refresh()
+                self.win.getch()
+                exit(-1)
 
 
     def load_facade(self, facade_name):
@@ -169,9 +178,25 @@ class BashManager():
     def __input_keyboard(self):
         while self.variables.enable_keyboard:
             ch = self.win.getch()
+            # If the "q" key is pressed, exits the programme
             if ch == ord("q"):
                 exit(0)
-            elif str(ch) in list(self.keys_facades.keys()):
+            # If the ALT key has been pressed a combination starts
+            elif ch == 27:
+                ch1 = self.win.getch()
+                # If you press Z together with the ALT key, you return to the previous facade
+                if ch1 == ord("z"):
+                    self.current_facade, self.previus_facade = self.previus_facade, self.current_facade
+                    self.load_facade(self.current_facade)
+                # If you press H together with the ALT key, you return to the main facade
+                elif ch1 == ord("h"):
+                    self.previus_facade = self.current_facade
+                    self.current_facade = "main"
+                    self.load_facade(self.current_facade)
+            # Check if the selected button corresponds to a facade
+            elif str(ch) in list(self.keys_facades.keys()): 
+                self.previus_facade = self.current_facade
+                self.current_facade = self.keys_facades[str(ch)]
                 self.load_facade(self.keys_facades[str(ch)])
                 self.keys_facades = {}
-                self.variables.set_keyboard(True)
+                self.variables.set_keyboard(False)
