@@ -2,8 +2,8 @@
     "window" : {
         "title" : "Autobuilder",
         "body" : {
-            "1" : "Test String 1",
-            "2" : "Test String 2"
+            "2" : "Test String 1",
+            "3" : "Test String 2"
         },
         "footer" : "Cioa"
     }

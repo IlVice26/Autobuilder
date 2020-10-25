@@ -31,8 +31,8 @@ class BashManager():
         curses.curs_set(0)
 
         # Window setting, dimwin[0] = y, dimwin[1] = x
-        self.dimwin = self.get_max_xy()
-        self.win = self.create_win(self.dimwin[0], self.dimwin[1])
+        self.dimwin = self.__get_max_xy()
+        self.win = self.__create_win(self.dimwin[0], self.dimwin[1])
 
         self.dimwinx = self.dimwin[1]
         self.dimwiny = self.dimwin[0]
@@ -41,10 +41,10 @@ class BashManager():
         self.all_facades = {}
 
         # Load conf file
-        self.load_conf_json()
+        self.__load_conf_json()
 
 
-    def add_str_pos(self, string, pos_x, pos_y, type=""):
+    def __add_str_pos(self, string, pos_x, pos_y, type=""):
         """ Print a string in a specific point and refresh the window """
 
         if type is "bold":
@@ -57,7 +57,7 @@ class BashManager():
             self.win.addstr(pos_x, pos_y, str(string))
 
 
-    def add_title(self, string):
+    def __add_title(self, string):
         """ Print a title """
 
         # Calculation of the space between the title and the borders
@@ -74,43 +74,50 @@ class BashManager():
             , curses.A_REVERSE)
 
 
-    def add_body(self, dict_b):
+    def __add_body(self, dict_b):
         # self.add_str_pos(str(len(dict_b) + 1), 0 , 0)
         for key in list(dict_b.keys()):
             if str(dict_b[key]).__contains__("&v&"):
                 string = str(dict_b[key]).split("&v&")
-                self.add_str_pos(str(string[0]) + str(self.get_var(string[-2])), int(key), 0)
+                self.__add_str_pos(str(string[0]) + str(self.__get_var(string[-2])), int(key), 0)
             else:
-                self.add_str_pos(str(dict_b[key]), int(key), 0)
+                self.__add_str_pos(str(dict_b[key]), int(key), 0)
 
 
-    def add_footer(self, string):
+    def __add_footer(self, string):
         if not string == "":
             space_right = self.dimwin[1] - len(string) - 1
-            self.add_str_pos(string + " " * space_right, 
+            self.__add_str_pos(string + " " * space_right, 
                 self.dimwin[0] - 1, 0, "reverse")
 
 
-    def create_win(self, height, width):
+    def __create_win(self, height, width):
         win = curses.newwin(height, width)
         return win
 
 
-    def get_max_xy(self):
+    def __get_max_xy(self):
         return self.stdscr.getmaxyx()
 
 
-    def get_var(self, source):
+    def __get_var(self, source):
         return getattr(self, source)
 
 
-    def load_conf_json(self):
+    def __load_conf_json(self):
         """ It loads all window configs """
         
         # Loading config file
-        conf_file = open("facades/config.json", "r")
-        data_conf = json.load(conf_file)
-        files_win = data_conf["facades"]
+        try:
+            conf_file = open("facades/config.json", "r")
+            data_conf = json.load(conf_file)
+            files_win = data_conf["facades"]
+        except FileNotFoundError:
+            self.__clear_win()
+            self.__add_str_pos("The 'config.json' file has not been found...", 0, 0)
+            self.win.refresh()
+            self.win.getch()
+            exit(-1)
 
         self.all_facades = {}
 
@@ -122,18 +129,35 @@ class BashManager():
 
 
     def load_facade(self, facade_name):
+        """ Load a facade chosen by the user """
+
         filename = facade_name + ".json"
-        self.add_title(self.all_facades[filename]["title"])
-        self.add_body(self.all_facades[filename]["body"])
-        self.add_footer(self.all_facades[filename]["footer"])
-        self.win.refresh()
-        self.win.getch()
+
+        # Check if the file has been uploaded previously
+        if filename in list(self.all_facades.keys()):
+            self.__clear_win()
+            self.__add_title(self.all_facades[filename]["title"])
+            self.__add_body(self.all_facades[filename]["body"])
+            self.__add_footer(self.all_facades[filename]["footer"])
+            self.win.refresh()
+            self.win.getch()
+        else:
+            self.__clear_win()
+            self.__add_str_pos("The façade was not previously loaded." +
+            " Check the name and reload the program.", 0, 0)
+            self.win.refresh()
+            self.win.getch()
+            exit(-1)
 
 
-    def load_facade_test(self):
+    def __load_facade_test(self):
         filename = "test.json"
-        self.add_title(self.all_facades[filename]["title"])
-        self.add_body(self.all_facades[filename]["body"])
-        self.add_footer(self.all_facades[filename]["footer"])
+        self.__add_title(self.all_facades[filename]["title"])
+        self.__add_body(self.all_facades[filename]["body"])
+        self.__add_footer(self.all_facades[filename]["footer"])
         self.win.refresh()
         self.win.getch()
+
+
+    def __clear_win(self):
+        self.win.clear()

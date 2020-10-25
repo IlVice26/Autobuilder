@@ -1,5 +1,6 @@
 {
     "facades" : [
-        "test.json"
+        "test.json",
+        "main.json"
     ]
 }

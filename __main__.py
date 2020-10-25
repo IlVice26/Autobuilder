@@ -20,6 +20,9 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         os.system("reset")
         tcflush(sys.stdin, TCIOFLUSH)
-    finally:
+    except SystemExit:
         os.system("reset")
-        tcflush(sys.stdin, TCIOFLUSH)
+        exit(-1)
+    
+    os.system("reset")
+    tcflush(sys.stdin, TCIOFLUSH)

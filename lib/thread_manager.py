@@ -33,6 +33,7 @@ class ThreadManager():
         try:
             # Initialization of the Thread
             self.bash.load_facade("test")
+            self.bash.load_facade("main1")
 
             # From this point all Threads start
             pass
