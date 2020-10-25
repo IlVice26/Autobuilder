@@ -2,9 +2,9 @@
     "window" : {
         "title" : "Autobuilder",
         "body" : {
-            "2" : "Test String 1",
-            "3" : "Test String 2"
+            "2" : "1) Change facade to test.json<fa>test<key>49</key></fa>",
+            "4" : "Keys_dict <v>keys_facades</v>"
         },
-        "footer" : "Cioa"
+        "footer" : "Autobuilder - 2020 Elia Vicentini"
     }
 }

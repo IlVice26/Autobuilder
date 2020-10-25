@@ -1,12 +1,12 @@
 {
     "window" : {
-        "title" : "Autobuilder - Configuration",
+        "title" : "Autobuilder - Test Facade",
         "body" : {
             "2" : "Terminal size: ",
-            "3" : "  -> x: &v&dimwinx&v&",
-            "4" : "  -> y: &v&dimwiny&v&",
-            "6" : "Facades dict",
-            "7" : "&v&all_facades&v&"
+            "3" : "  -> x: <v>dimwinx</v>",
+            "4" : "  -> y: <v>dimwiny</v>",
+            "6" : "Keys Facade",
+            "7" : "<v>keys_facades</v>"
         },
         "footer" : ""
     }

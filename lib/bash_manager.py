@@ -8,26 +8,20 @@
 """ Manages bash screen display """
 
 import os
+import re
 import curses
 import json
 
 
 class BashManager():
 
-    def __init__(self):
+    def __init__(self, variables_manager):
         self.stdscr = curses.initscr()
-
-        # Initial settings
-        curses.start_color()
-        
-        # Color Pair 
-        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)  # First Color
-        curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)  # Second Color
+        self.variables = variables_manager
 
         # Other settings
         curses.noecho()
-        curses.nocbreak() 
-        self.stdscr.bkgd(curses.color_pair(1))
+        curses.cbreak() 
         curses.curs_set(0)
 
         # Window setting, dimwin[0] = y, dimwin[1] = x
@@ -39,6 +33,7 @@ class BashManager():
 
         # Class variables
         self.all_facades = {}
+        self.keys_facades = {}
 
         # Load conf file
         self.__load_conf_json()
@@ -77,9 +72,17 @@ class BashManager():
     def __add_body(self, dict_b):
         # self.add_str_pos(str(len(dict_b) + 1), 0 , 0)
         for key in list(dict_b.keys()):
-            if str(dict_b[key]).__contains__("&v&"):
-                string = str(dict_b[key]).split("&v&")
+            # Check if there is a variable to print inside the string
+            if str(dict_b[key]).__contains__("<v>") & str(dict_b[key]).__contains__("</v>") :
+                string = re.split("<v>|</v>",str(dict_b[key]))
                 self.__add_str_pos(str(string[0]) + str(self.__get_var(string[-2])), int(key), 0)
+            # Check if there is a facade inside the string to be displayed if a certain key is pressed 
+            elif str(dict_b[key]).__contains__("<fa>") & str(dict_b[key]).__contains__("</fa>"):
+                string = re.split("<fa>|</fa>", str(dict_b[key]))
+                facade_var = re.split("<key>|</key>", string[-2])
+                keyboard_key = facade_var[1]
+                self.keys_facades[keyboard_key] = facade_var[0]
+                self.__add_str_pos(str(string[0]), int(key) , 0)
             else:
                 self.__add_str_pos(str(dict_b[key]), int(key), 0)
 
@@ -89,6 +92,14 @@ class BashManager():
             space_right = self.dimwin[1] - len(string) - 1
             self.__add_str_pos(string + " " * space_right, 
                 self.dimwin[0] - 1, 0, "reverse")
+
+
+    def update_footer(self, string):
+        if not string == "":
+            space_right = self.dimwin[1] - len(string) - 1
+            self.__add_str_pos(string + " " * space_right, 
+                self.dimwin[0] - 1, 0, "reverse")
+            self.win.refresh()
 
 
     def __create_win(self, height, width):
@@ -140,7 +151,8 @@ class BashManager():
             self.__add_body(self.all_facades[filename]["body"])
             self.__add_footer(self.all_facades[filename]["footer"])
             self.win.refresh()
-            self.win.getch()
+            self.variables.set_keyboard(True)
+            self.__input_keyboard()
         else:
             self.__clear_win()
             self.__add_str_pos("The façade was not previously loaded." +
@@ -150,14 +162,16 @@ class BashManager():
             exit(-1)
 
 
-    def __load_facade_test(self):
-        filename = "test.json"
-        self.__add_title(self.all_facades[filename]["title"])
-        self.__add_body(self.all_facades[filename]["body"])
-        self.__add_footer(self.all_facades[filename]["footer"])
-        self.win.refresh()
-        self.win.getch()
-
-
     def __clear_win(self):
         self.win.clear()
+
+
+    def __input_keyboard(self):
+        while self.variables.enable_keyboard:
+            ch = self.win.getch()
+            if ch == ord("q"):
+                exit(0)
+            elif str(ch) in list(self.keys_facades.keys()):
+                self.load_facade(self.keys_facades[str(ch)])
+                self.keys_facades = {}
+                self.variables.set_keyboard(True)

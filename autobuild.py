@@ -9,13 +9,19 @@
 
 from lib.thread_manager import ThreadManager
 from lib.bash_manager import BashManager
+from lib.variables_manager import VariablesManager
 import os
 
 
 def main():
 
     # Initialising all libraries
-    bash_manager = BashManager()
-    thread_manager = ThreadManager(bash_manager)
-
+    variables_manager = VariablesManager()
+    bash_manager = BashManager(variables_manager)
+    thread_manager = ThreadManager(bash_manager, variables_manager)
+    
+    bash_manager.load_facade("main")
     thread_manager.start_threads()
+    
+    
+

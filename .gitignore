@@ -1,2 +1,4 @@
 __pycache__
 lib/__pycache__
+test/
+.vscode/
